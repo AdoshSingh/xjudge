@@ -40,6 +40,7 @@ def callback(ch, method, properties, body):
   data = json.loads(body)
   code = data.get("code")
   lang = data.get("language")
+  user = data.get("userId")
   output = ""
   
   try: 
@@ -53,7 +54,8 @@ def callback(ch, method, properties, body):
     result_queue = 'resultQueue'
     ch.queue_declare(queue=result_queue, durable=True)
     result_data = {
-      'output': output
+      'output': output,
+      'user': user
     }
     
     ch.basic_publish(
