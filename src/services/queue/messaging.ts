@@ -1,7 +1,8 @@
 import amqp from 'amqplib/callback_api';
+import { appConfig } from '../../config/appConfig';
 
 class MessagingQueue {
-  private rabbitmqUrl =  process.env.RABBITQ_URL || 'amqp://localhost';
+  private rabbitmqUrl =  appConfig.rabbitmqUrl;
   private connection: amqp.Connection | undefined | null;
   private channel:amqp.Channel | undefined | null;
 
@@ -57,6 +58,7 @@ class MessagingQueue {
   private static instance: MessagingQueue;
   
   private constructor() {
+    this.rabbitmqUrl = appConfig.rabbitmqUrl;
     this.connection = null;
     this.channel = null;
   }

@@ -3,8 +3,10 @@ import questionRouter from './routes/question';
 import http from 'http';
 import { startQueueService } from './services/queue';
 import { startWebSocketServer } from './websocket';
+import { appConfig } from './config/appConfig';
+import { connectToDatabase } from './db';
 
-const PORT = process.env.PORT || 9000;
+const PORT = appConfig.port;
 
 const app = express();
 const server = http.createServer(app);
@@ -12,6 +14,7 @@ const server = http.createServer(app);
 app.use(express.json());
 app.use('/question', questionRouter);
 
+connectToDatabase(appConfig.dbUrl);
 startQueueService();
 startWebSocketServer(server);
 
