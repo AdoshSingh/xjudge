@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 
 const questionSchema = new mongoose.Schema({
+  title: {
+    type:String,
+    required: true,
+  },
   statement: {
     type: String,
     required: true
@@ -25,6 +29,9 @@ const questionSchema = new mongoose.Schema({
   },
   program: {
     type: Object
+  },
+  solution: {
+    type:String
   }
 });
 

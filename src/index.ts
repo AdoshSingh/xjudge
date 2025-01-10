@@ -5,6 +5,7 @@ import { startQueueService } from './services/queue';
 import { startWebSocketServer } from './websocket';
 import { appConfig } from './config/appConfig';
 import { connectToDatabase } from './db';
+import path from 'path';
 
 const PORT = appConfig.port;
 
@@ -12,6 +13,9 @@ const app = express();
 const server = http.createServer(app);
 
 app.use(express.json());
+
+app.use(express.static(path.resolve(__dirname, '../' + '/public/' + '/dist')));
+
 app.use('/question', questionRouter);
 
 connectToDatabase(appConfig.dbUrl);
