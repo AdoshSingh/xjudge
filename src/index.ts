@@ -14,13 +14,16 @@ const server = http.createServer(app);
 
 app.use(express.json());
 
-app.use(express.static(path.resolve(__dirname, '../' + '/public/' + '/dist')));
-
-app.use('/question', questionRouter);
+app.use('/api/question', questionRouter);
 
 connectToDatabase(appConfig.dbUrl);
 startQueueService();
 startWebSocketServer(server);
+
+app.use(express.static(path.resolve(__dirname, '../' + '/public/' + '/dist')));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, '../' + '/public/' + '/dist', "index.html"));
+});
 
 server.listen(PORT, () => {
   console.log(`Server is running on ${PORT}`);

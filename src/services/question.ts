@@ -7,13 +7,12 @@ export class QuestionService {
     try {
       if(!quesId) {
         const allQuestions =  await this.questionRepo.getAllQuestions(); 
-        console.log(allQuestions);
         return allQuestions;
       }
       return await this.questionRepo.getQuestion(quesId);
     } catch (error) {
       console.error('Error in questionService.getQuestions -> ', error);
-      throw error;
+      throw error; 
     }
   }
 }

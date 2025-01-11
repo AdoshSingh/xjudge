@@ -26,12 +26,6 @@ const questionSchema = new mongoose.Schema({
   },
   testcases: {
     type: String
-  },
-  program: {
-    type: Object
-  },
-  solution: {
-    type:String
   }
 });
 

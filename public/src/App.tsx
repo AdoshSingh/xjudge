@@ -1,21 +1,15 @@
-import axios from "axios";
-import { useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "./components/Home";
 
-const App = () => {
-
-  useEffect(() => {
-    axios.get('/question').then((data) => {
-      console.log(data.data);
-    }).catch((err) => {
-      console.error(err);
-    })
-  }, [])
-
+function App() {
   return (
-    <div>
-      Hello XJudge
-    </div>
-  )
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/ques/:id" element={<Home />} />
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;
