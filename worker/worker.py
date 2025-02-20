@@ -8,11 +8,34 @@ def connectToRabbitMq():
   channel.queue_declare(queue='codeQueue', durable=True)
   return connection, channel
 
-def runPythonCodeInDocker(code): 
+def runPythonCodeInDocker(code, testcases):
+  host_testcases_file_path = os.path.abspath('testcases.txt')
+  container_testcases_file_path = '/app/testcases.txt'
+  
+  with open(host_testcases_file_path, 'w') as file:
+    file.write(testcases)
+    
+  host_code_file_path = os.path.abspath('main.py')
+  container_code_file_path = '/app/main.py'
+  
+  with open(host_code_file_path, 'w') as file:
+    file.write(code)
+  
   client = docker.from_env()
   container = client.containers.run(
     "python:3.8",
-    f"python -c \"{code}\"",
+    f"python {container_code_file_path}",
+    volumes={
+      host_code_file_path: {
+        'bind': container_code_file_path,
+        'mode': 'ro'
+      },
+      host_testcases_file_path: {
+        'bind': container_testcases_file_path,
+        'mode': 'ro'
+      }
+    },
+    working_dir='/app',
     detach=True,
     stdout=True,
     stderr=True
@@ -22,11 +45,34 @@ def runPythonCodeInDocker(code):
   container.remove()
   return output
 
-def runJavascriptCodeInDocker(code):
+def runJavascriptCodeInDocker(code, testcases):
+  host_testcases_file_path = os.path.abspath('testcases.txt')
+  container_testcases_file_path = '/app/testcases.txt'
+  
+  with open(host_testcases_file_path, 'w') as file:
+    file.write(testcases)
+    
+  host_code_file_path = os.path.abspath('index.js')
+  container_code_file_path = '/app/index.py'
+  
+  with open(host_code_file_path, 'w') as file:
+    file.write(code)
+    
   client = docker.from_env()
   container = client.containers.run(
     "node:22-slim",
-    f"node -e \"{code}\"",
+    f"node {container_code_file_path}",
+    volumes={
+      host_code_file_path: {
+        'bind': container_code_file_path,
+        'mode': 'ro'
+      },
+      host_testcases_file_path: {
+        'bind': container_testcases_file_path,
+        'mode': 'ro'
+      }
+    },
+    working_dir='/app',
     detach=True,
     stdout=True,
     stderr=True
@@ -41,13 +87,14 @@ def callback(ch, method, properties, body):
   code = data.get("code")
   lang = data.get("language")
   user = data.get("userId")
+  testcases = data.get("testcases")
   output = ""
   
   try: 
     if lang == "javascript":
-      output = runJavascriptCodeInDocker(code)
+      output = runJavascriptCodeInDocker(code, testcases)
     elif lang == "python":
-      output = runPythonCodeInDocker(code)
+      output = runPythonCodeInDocker(code, testcases)
       
     print(f"Code Output: {output}")
     
