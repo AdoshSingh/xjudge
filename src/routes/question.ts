@@ -22,6 +22,8 @@ router.post("/submit", async (req: Request, res: Response) => {
   try {
     const { code, questionId, language } = req.body;
 
+    console.log("Payload received -->", req.body);
+
     if (!code || !questionId || !language) {
       res.status(400).json({ error: "Invalid request" });
       return;

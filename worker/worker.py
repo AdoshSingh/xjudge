@@ -1,6 +1,7 @@
 import pika
 import docker 
 import json
+import os
 
 def connectToRabbitMq():
   connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
@@ -53,7 +54,7 @@ def runJavascriptCodeInDocker(code, testcases):
     file.write(testcases)
     
   host_code_file_path = os.path.abspath('index.js')
-  container_code_file_path = '/app/index.py'
+  container_code_file_path = '/app/index.js'
   
   with open(host_code_file_path, 'w') as file:
     file.write(code)
@@ -89,6 +90,8 @@ def callback(ch, method, properties, body):
   user = data.get("userId")
   testcases = data.get("testcases")
   output = ""
+  
+  print(f"Received code: {code}")
   
   try: 
     if lang == "javascript":

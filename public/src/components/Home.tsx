@@ -8,6 +8,7 @@ type Example = {
 };
 
 type Question = {
+  _id: string;
   title: string;
   statement: string;
   examples: Example[];
@@ -34,7 +35,7 @@ const Home = () => {
     <div>
       {questions?.map((ele) => {
         return (
-          <Card title={ele.title}/>
+          <Card title={ele.title} id={ele._id}/>
         )
       })}
     </div>
