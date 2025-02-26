@@ -8,7 +8,9 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "build:watch": "vite build --watch"
+    "build:dev": "NODE_ENV=development vite build --mode development",
+    "build:prod": "NODE_ENV=production tsc -b && vite build --mode production",
+    "build:watch": "NODE_ENV=development vite build --mode development --watch"
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",

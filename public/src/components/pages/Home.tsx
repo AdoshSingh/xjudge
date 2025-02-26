@@ -1,6 +1,6 @@
 import { apiService } from "@/services/apiService";
 import { useEffect, useState } from "react";
-import Card from "./Card";
+import Card from "../Card";
 
 type Example = {
   input: string;
@@ -23,8 +23,7 @@ const Home = () => {
   useEffect(() => {
     apiService.getAllQuestions() 
       .then((data) => {
-        console.log(data.data.data);
-        setQuestions(data.data.data);
+        setQuestions(data.data);
       })
       .catch((err) => {
         console.log(err);
@@ -35,7 +34,7 @@ const Home = () => {
     <div>
       {questions?.map((ele) => {
         return (
-          <Card title={ele.title} id={ele._id}/>
+          <Card key={ele._id} title={ele.title} id={ele._id}/>
         )
       })}
     </div>
