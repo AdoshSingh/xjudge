@@ -16,18 +16,26 @@ app.use(express.json());
 
 app.use('/api/question', questionRouter);
 
-connectToDatabase(appConfig.dbUrl);
-startQueueService();
-startWebSocketServer(server);
+const startServer = async () => {
+  try {
+    await connectToDatabase(appConfig.dbUrl);
+    await startQueueService();
+    startWebSocketServer(server);
+    server.listen(PORT, () => {
+      console.log(`Server is running on ${PORT}`);
+    });
+  } catch (err) {
+    console.error('Failed to start server:', err);
+    process.exit(1);
+  }
+};
 
 app.use(express.static(path.resolve(__dirname, '../' + '/public/' + '/dist')));
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, '../' + '/public/' + '/dist', "index.html"));
 });
 
-server.listen(PORT, () => {
-  console.log(`Server is running on ${PORT}`);
-});
+startServer();
 
 process.on('uncaughtException', (err, origin) => {
   console.error(`Uncaught Exception at ${origin}: ${err}`);

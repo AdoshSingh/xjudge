@@ -3,8 +3,10 @@ import docker
 import json
 import os
 
+RABBITMQ_URL = os.getenv('RABBITMQ_URL', 'amqp://guest:guest@localhost:5672')
+
 def connectToRabbitMq():
-  connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+  connection = pika.BlockingConnection(pika.ConnectionParameters((RABBITMQ_URL)))
   channel = connection.channel()
   channel.queue_declare(queue='codeQueue', durable=True)
   return connection, channel
@@ -121,6 +123,7 @@ def callback(ch, method, properties, body):
   
 def startWorker(): 
   connection, channel = connectToRabbitMq()
+  print(connection)
   channel.basic_consume(queue='codeQueue', on_message_callback=callback)
   
   print('Waiting for messages. To exit press CTRL + C')

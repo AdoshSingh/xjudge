@@ -4,12 +4,13 @@ import QuestionPage from "./components/pages/QuestionPage";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/ques/:id" element={<QuestionPage />} />
-      </Routes>
-    </Router>
+    <div>This works</div>
+    // <Router>
+    //   <Routes>
+    //     <Route path="/" element={<Home />} />
+    //     <Route path="/ques/:id" element={<QuestionPage />} />
+    //   </Routes>
+    // </Router>
   );
 }
 

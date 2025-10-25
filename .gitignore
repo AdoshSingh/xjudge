@@ -3,5 +3,4 @@ dist
 .env
 .env.local
 testcases.txt
-index.js
-main.py
+venv
