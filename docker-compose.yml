@@ -7,7 +7,7 @@ services:
     container_name: xjudge_frontend
     command: ["npm", "run", "dev"]
     ports:
-      - "3000:3000"
+      - "5173:5173"
     volumes:
       - ./frontend:/app
       - /app/node_modules
@@ -30,8 +30,10 @@ services:
       - RABBITMQ_URL=amqp://user:password@rabbitmq:5672
       - DB_URL=mongodb://mongo:27017/xjudge
     depends_on:
-      - mongo
-      - rabbitmq
+      mongo:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy 
 
   worker:
     build:
@@ -44,9 +46,12 @@ services:
     environment:
       - RABBITMQ_URL=amqp://user:password@rabbitmq:5672
       - DB_URL=mongodb://mongo:27017/xjudge
+      - PYTHONUNBUFFERED=1
     depends_on:
-      - mongo
-      - rabbitmq
+      mongo:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
 
   mongo:
     image: mongo:latest
@@ -62,6 +67,12 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
     environment:
       - RABBITMQ_DEFAULT_USER=user
       - RABBITMQ_DEFAULT_PASS=password
